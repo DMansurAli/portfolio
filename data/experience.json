@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "company": "UBS System Gulf (UAE - Remote)",
+    "role": "SENIOR .NET DEVELOPER",
+    "startDate": "June 2024",
+    "endDate": "March 2025",
+    "descriptions": "Worked on UX/UI for core Google Workspace tools and optimized design workflows."
+  },
+  {
+    "id": 2,
+    "company": " GF Assessment (UK - Remote)",
+    "role": "SENIOR .NET DEVELOPER",
+    "startDate": "July 2023",
+    "endDate": "March 2024",
+    "descriptions": "Developed scalable frontend components for Microsoft Azure portal and internal dashboards."
+  },
+  {
+    "id": 3,
+    "company": "Cronysoft",
+    "role": " SENIOR .NET DEVELOPER",
+    "startDate": "January 2022",
+    "endDate": "June 2023",
+    "descriptions": "Designed and implemented Dropbox’s file preview interface using React and CSS modules."
+  },
+  {
+    "id": 4,
+    "company": "Appsxone IT Solution",
+    "role": "Mid .NET DEVELOPER",
+    "startDate": "Jan 2019",
+    "endDate": "May 2022",
+    "descriptions": "Designed and implemented Dropbox’s file preview interface using React and CSS modules."
+  }
+]

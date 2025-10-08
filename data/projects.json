@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "projectname": "Backoffice",
+    "image": "backoffice.png",
+    "type": "API",
+    "url": "https://online.cronysoft.com/",
+    "descriptions": [
+      {
+        "title": "Pickup, Curbside, and Delivery",
+        "details": "Provide convenient self-service options for customers, including pickup, curbside, and delivery, where they don’t necessarily have to shop the store or even leave their homes to get what they need."
+      }
+    ],
+    "techs": [
+      ".NET Core",
+      "T-SQL"
+    ]
+  },
+  {
+    "id": 2,
+    "projectname": "E-commerce & Loyalty",
+    "image": "loyalty-app.png",
+    "type": "API",
+    "url": "https://online.cronysoft.com/",
+    "descriptions": [
+      {
+        "title": "Pickup, Curbside, and Delivery",
+        "details": "Provide convenient self-service options for customers, including pickup, curbside, and delivery, where they don’t necessarily have to shop the store or even leave their homes to get what they need."
+      }
+    ],
+    "techs": [
+      ".NET Core",
+      "T-SQL"
+    ]
+  }
+]
