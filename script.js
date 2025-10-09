@@ -9,6 +9,11 @@ async function loadData() {
     experiences.forEach(exp => {
       const block = document.createElement('div');
       block.className = 'timeline__block';
+
+      const detailsList = exp.details
+        .map(item => `<li>${item}</li>`)
+        .join('');
+
       block.innerHTML = `
         <div class="timeline__bullet"></div>
         <div class="timeline__header">
@@ -17,7 +22,7 @@ async function loadData() {
           <p class="timeline__timeframe">${exp.startDate} - ${exp.endDate}</p>
         </div>
         <div class="timeline__desc">
-          <p>${exp.descriptions}</p>
+          <ul>${detailsList}</ul>
         </div>
       `;
       expContainer.appendChild(block);

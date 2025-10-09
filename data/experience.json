@@ -5,15 +5,24 @@
     "role": "SENIOR .NET DEVELOPER",
     "startDate": "June 2024",
     "endDate": "March 2025",
-    "descriptions": "Worked on UX/UI for core Google Workspace tools and optimized design workflows."
+    "descriptions": "Worked on UX/UI for core Google Workspace tools and optimized design workflows.",
+    "details": [
+      "Developed enterprise-grade applications using .NET Core 8.0, ASP.NET MVC, and SQL Server. .",
+      "Converted legacy WebForms apps to modern .NET 8.0 architecture, improving performance, maintainability, and scalability."
+    ]
   },
   {
     "id": 2,
-    "company": " GF Assessment (UK - Remote)",
+    "company": " GF (Graduates First) Job Assessment Expert (UK - Remote)",
     "role": "SENIOR .NET DEVELOPER",
     "startDate": "July 2023",
     "endDate": "March 2024",
-    "descriptions": "Developed scalable frontend components for Microsoft Azure portal and internal dashboards."
+    "descriptions": "Developed scalable frontend components for Microsoft Azure portal and internal dashboards.",
+    "details": [
+      "Built scalable REST APIs and integrated them with complex systems.",
+      "Improved user satisfaction through efficient front-end collaboration.",
+      " Delivered 10+ software modules within Agile sprints."
+    ]
   },
   {
     "id": 3,
@@ -21,14 +30,26 @@
     "role": " SENIOR .NET DEVELOPER",
     "startDate": "January 2022",
     "endDate": "June 2023",
-    "descriptions": "Designed and implemented Dropbox’s file preview interface using React and CSS modules."
+    "descriptions": "Designed and implemented Dropbox’s file preview interface using React and CSS modules.",
+    "details": [
+      "Delivered ERP, Backoffice, and Ticketing systems across diverse business domains.",
+      "Architected and developed secure RESTful APIs using .NET Core 8.0, SQL Server, and ADO.NET with OAuth2.0 and JWT authentication.",
+      "Managed repositories and version control on GitHub; collaborated in Agile sprints to deliver modular, maintainable solutions.",
+      "Built a full-stack ticketing system using ASP.NET MVC, SignalR, and third-party payment APIs.",
+      "Deployed applications on Azure, leveraging App Service and Azure Storage for image and document management."
+    ]
   },
   {
     "id": 4,
     "company": "Appsxone IT Solution",
     "role": "Mid .NET DEVELOPER",
     "startDate": "Jan 2019",
-    "endDate": "May 2022",
+    "endDate": "Jul 2021",
     "descriptions": "Designed and implemented Dropbox’s file preview interface using React and CSS modules."
+    ,
+    "details": [
+      "Developed multiple client projects using ASP.NET MVC 5, WebForms, SQL JavaScript, Node.js, and SignalR.",
+      "Integrated DevExpress components, Google APIs (Maps, Email), and optimized databases with T-SQL for enhanced functionality and performance."
+    ]
   }
 ]
