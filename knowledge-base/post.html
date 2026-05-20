@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Details | Mansoor Ali</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="terminal-text">&lt; Back to Home</a>
+            <h1 id="postTitle" style="margin-top:20px;">Loading...</h1>
+        </header>
+
+        <section id="postContent">
+            <!-- Content will be injected here -->
+        </section>
+
+        <footer>
+            <p>&copy; 2025 Mansoor Ali | System.Logs</p>
+        </footer>
+    </div>
+        <!-- Load data first -->
+    <script src="data.js"></script>
+
+
+    <script src="script.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+
+        // Find the matching post
+        const post = posts.find(p => p.id === postId);
+
+        if (post) {
+            document.getElementById('postTitle').innerText = post.title;
+            document.getElementById('postContent').innerHTML = post.content;
+            document.title = `${post.title} | Mansoor Ali`;
+        } else {
+            document.getElementById('postTitle').innerText = "404: Post Not Found";
+            document.getElementById('postContent').innerHTML =
+                "<p>The requested log entry does not exist in the system.</p>";
+        }
+    });
+</script>
+</body>
+</html>
