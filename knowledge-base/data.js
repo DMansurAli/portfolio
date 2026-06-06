@@ -425,4 +425,285 @@ IWalletFactory</code></pre>
 </p>
 `
 },
+
+{
+    id: "repository-pattern",
+    file: "post_02.md",
+    date: "Jun 2026",
+    readTime: "7 min read",
+
+    title: "Understanding the Repository Pattern in C#",
+
+    description:
+        "A practical overview of the Repository Pattern in C# with real-world architectural tradeoffs, maintainability insights, and separation of concerns.",
+
+    tags: ["C#", ".NET", "Repository Pattern", "Layered Architecture"],
+
+    content: `
+
+<p>
+    Most applications start simple — and then quietly don't. Persistence logic
+    that began in one service spreads into controllers, background jobs, and API
+    handlers. Before long, you have database concerns woven through every layer
+    of the codebase, and changing one thing means touching five others.
+</p>
+
+<p>
+    The Repository Pattern is commonly used to stop that spread: it isolates
+    persistence concerns from business logic and centralizes data access behavior
+    in one place. Over the years, working across APIs, layered applications, and
+    enterprise systems where database logic evolved independently from business
+    requirements, I've found repositories valuable for one specific reason — they
+    prevent infrastructure concerns from leaking into application logic. Not
+    because they add abstraction, but because they give that abstraction a clear
+    home.
+</p>
+
+<h3>What is the Repository Pattern?</h3>
+
+<p>
+    The Repository Pattern introduces a dedicated layer responsible for data access
+    operations. Instead of letting services or controllers talk directly to the
+    database, repositories act as the boundary between business logic and persistence
+    concerns. Your service asks for a wallet by ID; it doesn't need to know whether
+    that wallet lives in SQL Server, an in-memory list, or somewhere else entirely.
+</p>
+
+<p>
+    That separation improves maintainability and testability — and in layered
+    applications, it makes the distinction between "what the system does" and
+    "how it stores things" explicit and enforceable.
+</p>
+
+<h3>Project Structure</h3>
+
+<pre><code>RepositoryPattern/
+│
+├── Models/
+│   └── Wallet.cs
+│
+├── Repositories/
+│   ├── IWalletRepository.cs
+│   └── WalletRepository.cs
+│
+├── Services/
+│   └── WalletService.cs
+│
+└── Program.cs</code></pre>
+
+<h3>Example Model</h3>
+
+<pre><code class="language-csharp">public class Wallet
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; } = string.Empty;
+
+    public string Currency { get; set; } = string.Empty;
+
+    public decimal Balance { get; set; }
+}</code></pre>
+
+<h3>Repository Contract</h3>
+
+<p>
+    Rather than reaching for a highly generic abstraction upfront, this example
+    uses a focused repository that represents wallet-specific persistence behavior.
+    Focused repositories tend to age better than generic CRUD abstractions because
+    real systems usually grow to need domain-specific queries — and a
+    <code>GetAll()</code> on a generic <code>IRepository&lt;T&gt;</code> rarely stays
+    sufficient for long.
+</p>
+
+<pre><code class="language-csharp">public interface IWalletRepository
+{
+    IEnumerable&lt;Wallet&gt; GetAll();
+
+    Wallet? GetById(int id);
+
+    void Add(Wallet wallet);
+
+    void Update(Wallet wallet);
+
+    void Delete(int id);
+}</code></pre>
+
+<h3>Repository Implementation</h3>
+
+<p>
+    The implementation honors the contract and keeps all persistence details
+    — in this case an in-memory list, in production a database — entirely
+    behind the interface:
+</p>
+
+<pre><code class="language-csharp">public class WalletRepository : IWalletRepository
+{
+    private readonly List&lt;Wallet&gt; _wallets = new();
+
+    public IEnumerable&lt;Wallet&gt; GetAll()
+    {
+        return _wallets;
+    }
+
+    public Wallet? GetById(int id)
+    {
+        return _wallets
+            .FirstOrDefault(w =&gt; w.Id == id);
+    }
+
+    public void Add(Wallet wallet)
+    {
+        _wallets.Add(wallet);
+    }
+
+    public void Update(Wallet wallet)
+    {
+        var existingWallet = _wallets
+            .FirstOrDefault(w =&gt; w.Id == wallet.Id);
+
+        if (existingWallet is not null)
+        {
+            existingWallet.Name = wallet.Name;
+            existingWallet.Currency = wallet.Currency;
+            existingWallet.Balance = wallet.Balance;
+        }
+    }
+
+    public void Delete(int id)
+    {
+        var wallet = _wallets
+            .FirstOrDefault(w =&gt; w.Id == id);
+
+        if (wallet is not null)
+        {
+            _wallets.Remove(wallet);
+        }
+    }
+}</code></pre>
+
+<h3>Using the Repository in a Service</h3>
+
+<p>
+    With the repository in place, <code>WalletService</code> can focus entirely on
+    business operations. It has no idea how wallets are stored — and that ignorance
+    is exactly the point. If you swap the in-memory implementation for one backed
+    by Entity Framework Core tomorrow, the service doesn't change at all.
+</p>
+
+<pre><code class="language-csharp">public class WalletService
+{
+    private readonly IWalletRepository _repository;
+
+    public WalletService(IWalletRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public void CreateWallet(Wallet wallet)
+    {
+        _repository.Add(wallet);
+    }
+
+    public IEnumerable&lt;Wallet&gt; GetWallets()
+    {
+        return _repository.GetAll();
+    }
+}</code></pre>
+
+<p>
+    This separation pays off most when persistence logic, validation rules, or
+    infrastructure concerns evolve at different speeds from business logic — which,
+    in any system that lives long enough, they always do.
+</p>
+
+<h3>How the Flow Works</h3>
+
+<p>
+    In a layered architecture, services communicate with repositories instead of
+    reaching into the database or ORM directly. The business layer expresses intent
+    (<em>give me this wallet, save that one</em>); the repository layer decides how
+    to fulfill it. That boundary also makes testing straightforward — swap the real
+    repository for an in-memory mock and your service tests run without a database
+    in sight.
+</p>
+
+<h3>Where Developers Commonly Overengineer Repositories</h3>
+
+<p>
+    Clean separation is valuable. A forest of abstractions is not. One of the most
+    common mistakes I see in enterprise .NET codebases is reaching for generic
+    repository layers before there's any real reason to:
+</p>
+
+<pre><code class="language-csharp">IRepository&lt;T&gt;
+IAsyncRepository&lt;T&gt;
+IReadOnlyRepository&lt;T&gt;
+IUnitOfWork</code></pre>
+
+<p>
+    In many applications, these abstractions duplicate behavior that Entity Framework
+    Core's <code>DbContext</code> and <code>DbSet</code> already provide — and they do it
+    with more indirection, more files to navigate, and query behavior that's harder
+    to follow. You end up wrapping a well-designed ORM with a leakier version of itself.
+</p>
+
+<p>
+    Good architecture reduces complexity. It doesn't introduce layers that solve
+    problems the application doesn't actually have.
+</p>
+
+<h3>Repository Pattern with Entity Framework Core</h3>
+
+<p>
+    With that in mind, some teams skip generic repository abstractions entirely when
+    using EF Core — and reasonably so. <code>DbContext</code> already behaves like a
+    repository and unit of work. In smaller applications, using it directly is often
+    simpler and easier to maintain than wrapping it in additional layers.
+</p>
+
+<p>
+    Repositories still earn their place, though, when the system grows into
+    genuinely complex territory:
+</p>
+
+<ul>
+    <li>business queries become complex and domain-specific</li>
+    <li>multiple data sources need to be unified behind one interface</li>
+    <li>persistence concerns must be isolated for testing at scale</li>
+    <li>application logic needs to stay storage-agnostic across environments</li>
+</ul>
+
+<p>
+    The right choice depends on where the system actually is — not where you imagine
+    it might end up.
+</p>
+
+<h3>Key Takeaways</h3>
+
+<ul>
+    <li>Repositories isolate persistence concerns — but only introduce them when that isolation is genuinely needed</li>
+    <li>Focused, domain-specific repositories age better than generic CRUD abstractions</li>
+    <li>The pattern makes services testable without a real database — swap the implementation, not the interface</li>
+    <li>EF Core's <code>DbContext</code> already provides repository-like behavior; wrapping it blindly adds indirection, not value</li>
+    <li>Architecture decisions should be driven by real system pressure, not anticipated complexity</li>
+</ul>
+
+<h3>Final Note</h3>
+
+<p>
+    The real litmus test for a repository isn't "does this follow the pattern?" It's:
+    does isolating persistence here make the system easier to change safely? If
+    swapping the storage layer — from SQL to NoSQL, from one ORM to another — can
+    happen without touching business logic, the repository is earning its keep.
+    If it's just wrapping EF Core calls one-for-one with no added clarity, it's
+    probably just noise.
+</p>
+
+<p>
+    Use the pattern where the system pushes back. Let simplicity lead everywhere else.
+</p>
+`
+},
+
+
 ];
